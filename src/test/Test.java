@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Test {
@@ -29,6 +31,7 @@ public class Test {
 					i=0;
 				}
 			}
+			//file = "<div style='width:20px;height:20px;background:blue'></div>".getBytes();
 			ou.write(file);
 			Thread.sleep(1000);
 			ou.close();
@@ -88,10 +91,76 @@ public class Test {
 		System.out.println();
 		System.out.println(new String(decrypt));
 	}
-	public void t2() {
+	public static void t2() {
+		char start = 'a';
+		char[] b1  = new char[19];
+		int[] b2 = new int[19];
+		int count = 0;
+		for(int i=1;i<=10;i++) {
+			//System.out.println(start+" >> "+i);
+			b1[count] = start;
+			b2[count++] = i;
+			start++;
+		}
+		for(int i=20;i<=100;i+=10) {
+			//System.out.println(start+" >> "+i);
+			b1[count] = start;
+			b2[count++] = i;
+			start++;
+		}
+		//(Math.random() * ((max - min) + 1)) + min
+		String toEncrypt = new Scanner(System.in).next();
+		byte[] bytes = new byte[toEncrypt.length()];
+		bytes = toEncrypt.getBytes();
+		String encrypted = "";
+		int rand;
+		int typeOfByte;
+		for(int i=0;i<bytes.length;i++) {
+			if(bytes[i] >0) {
+				typeOfByte = 1;
+			}else {
+				typeOfByte = -1;
+			}
+			encrypted+=typeOfByte+">>";
+			while(true) {
+				rand = (int) ((Math.random() * ((19 - 0) + 1)) + 0);
+				try {
+					//b2[rand] = b2[rand]*typeOfByte;
+					
+					if(typeOfByte >0) {
+						System.out.println(bytes[i]+ ">="+ b2[rand]);
+					if(bytes[i] >= b2[rand]) {
+						System.out.println(bytes[i]);
+						System.out.println(b2[rand]);
+						bytes[i]-=b2[rand];
+						encrypted +=b1[rand];
+						
+					}
+					}else {
+						System.out.println(bytes[i]+ "<="+ b2[rand]);
+						if(bytes[i] <= b2[rand]) {
+							System.out.println(bytes[i]);
+							System.out.println(b2[rand]);
+							bytes[i]+=b2[rand];
+							encrypted +=b1[rand];
+						}
+					}
+					if(bytes[i] == 0) {
+						encrypted+=".";
+						typeOfByte = 0;
+						break;
+					}
+				}catch(Exception e) {
+					
+				}
+			}
+		}
+		System.out.println("encrypted:"+encrypted);
 		
 	}
-	public static void main(String [] args) {
-		t1();
+	public static void main(String [] args)throws Exception {
+		new Test().sockTest();
+		//t1();
+		//t2();
 	}
 }
