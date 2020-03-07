@@ -116,34 +116,25 @@ public class Test {
 		int rand;
 		int typeOfByte;
 		for(int i=0;i<bytes.length;i++) {
+			System.out.print(bytes[i]+" ");
 			if(bytes[i] >0) {
 				typeOfByte = 1;
 			}else {
 				typeOfByte = -1;
 			}
-			encrypted+=typeOfByte+">>";
+			encrypted+=(typeOfByte==1)?1:0;
+			bytes[i]*=typeOfByte;
 			while(true) {
 				rand = (int) ((Math.random() * ((19 - 0) + 1)) + 0);
 				try {
 					//b2[rand] = b2[rand]*typeOfByte;
 					
-					if(typeOfByte >0) {
-						System.out.println(bytes[i]+ ">="+ b2[rand]);
 					if(bytes[i] >= b2[rand]) {
-						System.out.println(bytes[i]);
+						//System.out.println(bytes[i]);
 						System.out.println(b2[rand]);
 						bytes[i]-=b2[rand];
 						encrypted +=b1[rand];
 						
-					}
-					}else {
-						System.out.println(bytes[i]+ "<="+ b2[rand]);
-						if(bytes[i] <= b2[rand]) {
-							System.out.println(bytes[i]);
-							System.out.println(b2[rand]);
-							bytes[i]+=b2[rand];
-							encrypted +=b1[rand];
-						}
 					}
 					if(bytes[i] == 0) {
 						encrypted+=".";
@@ -155,12 +146,68 @@ public class Test {
 				}
 			}
 		}
+		System.out.println();
 		System.out.println("encrypted:"+encrypted);
+		System.out.println("size:"+encrypted.length());
+		t3(encrypted);
 		
 	}
+	public static void t3(String encrypted) {
+		char start = 'a';
+		char[] b1  = new char[19];
+		int[] b2 = new int[19];
+		int count = 0;
+		for(int i=1;i<=10;i++) {
+			//System.out.println(start+" >> "+i);
+			b1[count] = start;
+			b2[count++] = i;
+			start++;
+		}
+		for(int i=20;i<=100;i+=10) {
+			//System.out.println(start+" >> "+i);
+			b1[count] = start;
+			b2[count++] = i;
+			start++;
+		}
+		List<String> list = new ArrayList<>();
+		String aux = "";
+		for(int i=0;i<encrypted.length();i++) {
+			if(encrypted.charAt(i) == '.') {
+				list.add(aux);
+				aux="";
+			}else {
+				aux+=encrypted.charAt(i);
+			}
+		}
+		System.out.println(list);
+		byte[] bytes = new byte[list.size()];
+		int i = 0;
+		//for(int i=0;i<list.size();i++) {
+			for(String s:list) {
+				for(int ii=1;ii<s.length();ii++) {
+					for(int iii =0;iii<b1.length;iii++) {
+						if(b1[iii] == s.charAt(ii)) {
+							bytes[i] +=b2[iii];
+						}
+					}
+				}
+				bytes[i]*=(s.charAt(0)=='1')?1:-1;
+				System.out.println("end bytes[i]:"+bytes[i]);
+				i++;
+			}
+			for(byte b:bytes) {
+				System.out.print(b+",");
+			}
+			System.out.println();
+			System.out.println("decrypted:"+new String(bytes));
+		//}
+	}
 	public static void main(String [] args)throws Exception {
-		new Test().sockTest();
+		//new Test().sockTest();
 		//t1();
-		//t2();
+		while(true) {
+			System.out.print("type txt:");
+			t2();
+		}
 	}
 }
