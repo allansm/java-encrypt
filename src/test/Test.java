@@ -36,10 +36,12 @@ public class Test {
 			System.out.println("foi");
 		}
 	}
-	public static void main(String [] args) {
+	public static void t1() {
 		System.out.print("put the text:");
 		byte[] bytes = new Scanner(System.in).next().getBytes();
+		System.out.println();
 		int i = 0;
+		System.out.println("normal");
 		for(byte b:bytes) {
 			System.out.print(b+" ");
 			if(i++ >9) {
@@ -48,13 +50,48 @@ public class Test {
 			}
 		}
 		System.out.println();
+		System.out.println(new String(bytes));
+		System.out.println();
 		i = 0;
+		int count=0;
+		byte[] newByte = new byte[bytes.length];
 		for(byte b:bytes) {
-			System.out.print((char)(b+10)+" ");
+			newByte[count++] = (byte)(b+10);
 			if(i++ >9) {
 				System.out.print("\n");
 				i=0;
 			}
 		}
+		System.out.println("encrypted");
+		for(byte b:newByte) {
+			System.out.print(b+" ");
+			if(i++ >9) {
+				System.out.print("\n");
+				i=0;
+			}
+		}
+		System.out.println();
+		System.out.println(new String(newByte));
+		System.out.println();
+		byte[] decrypt = new byte[newByte.length];
+		System.out.println("decrypted");
+		count = 0;
+		for(byte b:newByte) {
+			b = (byte)(b-10);
+			System.out.print(b+" ");
+			decrypt[count++] = b;
+			if(i++ >9) {
+				System.out.print("\n");
+				i=0;
+			}
+		}
+		System.out.println();
+		System.out.println(new String(decrypt));
+	}
+	public void t2() {
+		
+	}
+	public static void main(String [] args) {
+		t1();
 	}
 }
