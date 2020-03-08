@@ -70,15 +70,8 @@ public class Encrypt {
 			bytes[i]*=typeOfByte;
 			while(true) {
 				rand = (int) ((Math.random() * ((b2.length - 0) + 1)) + 0);
-				//System.out.println("rand:"+rand);
 				try {
-					//b2[rand] = b2[rand]*typeOfByte;
-					//higher = findHigher(bytes[i]);
-					//bytes[i]-=b2[higher];
-					//encrypted +=b1[higher];
 					if(bytes[i] >= b2[rand] && b2[rand] != 0) {
-						//System.out.println("bytes:"+bytes[i]);
-						//System.out.println("b2:"+b2[rand]);
 						bytes[i]-=b2[rand];
 						encrypted +=b1[rand];
 					}
@@ -98,7 +91,7 @@ public class Encrypt {
 		//t3(encrypted);
 		return encrypted;
 	}
-	public byte[] decrypt(String encrypted) {
+	public List<String> split(String encrypted){
 		List<String> list = new ArrayList<>();
 		String aux = "";
 		for(int i=0;i<encrypted.length();i++) {
@@ -110,6 +103,10 @@ public class Encrypt {
 			}
 		}
 		System.out.println(list);
+		return list;
+	}
+	public byte[] decrypt(String encrypted) {
+		List<String> list = split(encrypted);
 		byte[] bytes = new byte[list.size()];
 		int count = 0;
 		for(String s:list) {
@@ -128,12 +125,33 @@ public class Encrypt {
 	public void test() {
 		setKey();
 		setBases();
-		System.out.print("type:");
+		System.out.print("type txt:");
 		String encrypted = encrypt(new Scanner(System.in).next());
 		byte[] bytes = decrypt(encrypted);
 		System.out.println(new String(bytes));
 	}
+	public void test2() {
+		setKey();
+		setBases();
+		System.out.print("type txt:");
+		String encrypted = encrypt(new Scanner(System.in).next());
+		System.out.println(encrypted);
+	}
+	public void test3() {
+		System.out.print("type key:");
+		setKey(new Scanner(System.in).nextInt());
+		setBases();
+		System.out.print("type encrypted txt:");
+		byte[] bytes = decrypt(new Scanner(System.in).next());
+		System.out.println(new String(bytes));
+	}
 	public static void main(String[] args) {
-		new Encrypt().test();
+		//new Encrypt().test();
+		System.out.print("type 1 to encrypt or anything to decrypt:");
+		if(new Scanner(System.in).next().equals("1")) {
+			new Encrypt().test2();
+		}else {
+			new Encrypt().test3();
+		}
 	}
 }
