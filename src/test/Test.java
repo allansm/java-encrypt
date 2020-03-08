@@ -131,7 +131,7 @@ public class Test {
 					
 					if(bytes[i] >= b2[rand]) {
 						//System.out.println(bytes[i]);
-						System.out.println(b2[rand]);
+						//System.out.println(b2[rand]);
 						bytes[i]-=b2[rand];
 						encrypted +=b1[rand];
 						
