@@ -1,5 +1,7 @@
 package test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Encrypt {
@@ -36,6 +38,10 @@ public class Encrypt {
 			count++;
 		}
 	}
+	public void releaseBases() {
+		b1 = null;
+		b2 = null;
+	}
 	public int findHigher(int val) {
 		for(int ii = b2.length;ii>0;ii--) {
 			System.out.println(val+":"+b2[ii]);
@@ -46,7 +52,7 @@ public class Encrypt {
 		}
 		return 0;
 	}
-	public void encrypt(String toEncrypt) {
+	public String encrypt(String toEncrypt) {
 		bytes = new byte[toEncrypt.length()];
 		bytes = toEncrypt.getBytes();
 		int higher = 0;
@@ -90,15 +96,42 @@ public class Encrypt {
 		System.out.println("encrypted:"+encrypted);
 		System.out.println("size:"+encrypted.length());
 		//t3(encrypted);
+		return encrypted;
 	}
-	public void decrypt() {
-		
+	public byte[] decrypt(String encrypted) {
+		List<String> list = new ArrayList<>();
+		String aux = "";
+		for(int i=0;i<encrypted.length();i++) {
+			if(encrypted.charAt(i)=='.') {
+				list.add(aux);
+				aux = "";
+			}else {
+				aux+=encrypted.charAt(i);
+			}
+		}
+		System.out.println(list);
+		byte[] bytes = new byte[list.size()];
+		int count = 0;
+		for(String s:list) {
+			for(int i=1;i<s.length();i++) {
+				for(int ii=0;ii<b1.length;ii++) {
+					if(b1[ii] == s.charAt(i)) {
+						bytes[count]+=b2[ii];
+					}
+				}
+			}
+			bytes[count]*=(s.charAt(0)=='1')?1:-1;
+			count++;
+		}
+		return bytes;
 	}
 	public void test() {
 		setKey();
 		setBases();
 		System.out.print("type:");
-		encrypt(new Scanner(System.in).next());
+		String encrypted = encrypt(new Scanner(System.in).next());
+		byte[] bytes = decrypt(encrypted);
+		System.out.println(new String(bytes));
 	}
 	public static void main(String[] args) {
 		new Encrypt().test();
