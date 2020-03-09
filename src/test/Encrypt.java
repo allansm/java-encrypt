@@ -5,18 +5,27 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Encrypt {
-	private char b1[] = new char[60];
-	private int b2[] = new int[60];
+	private char b1[];
+	private int b2[];
 	private int key;
 	private byte[] bytes;
 	public void setKey() {
-		this.key = (int)(Math.random() * ((12 - 5) + 1)) + 12;
+		this.key = (int)(Math.random() * ((33 - 10) + 1)) + 10;
 		System.out.println("KEY:"+key);
 	}
 	public void setKey(int key) {
 		this.key = key;
 	}
+	public void setBasesMaxSize() {
+		int maxSize = 5;
+		for(int i=20;i<=255;i+=key) {
+			maxSize++;
+		}
+		b1 = new char[maxSize];
+		b2 = new int[maxSize];
+	}
 	public void setBases() {
+		setBasesMaxSize();
 		char start = 'a';
 		int count = 0;
 		for(int i=1;i<=2;i++) {
