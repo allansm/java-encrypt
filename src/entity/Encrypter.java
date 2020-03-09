@@ -7,7 +7,20 @@ public class Encrypter {
 	public int generateKey() {
 		return (int)(Math.random() * ((33 - 10) + 1)) + 10;
 	}
-	public Data encrypt(Data data,Alphabet alphabet) {
+	public void brokenArray(byte[] array) {
+		int[] sizes = new int[9];
+		for(int i=0;i<10;i++) {
+			sizes[i] = array.length/i+1;
+		}
+		int start =0;
+		byte[][] bytes = new byte[99][99];
+		for(int i=0;i<9;i++) {
+			for(int ii=start;ii<sizes[i];ii++) {
+				
+			}
+		}
+	}
+	public Data encrypt(Data data,Alphabet alphabet)throws Exception {
 		/*Data data = new Data();
 		data.setDecrypted(new byte[toEncrypt.length()]);
 		data.setDecrypted(toEncrypt.getBytes());
@@ -17,31 +30,48 @@ public class Encrypter {
 		String encrypted = "";
 		int rand;
 		int typeOfByte;
+		byte valueBefore = 0;
+		byte original = 0;
+		byte[] bytes = data.getDecrypted();
 		for(int i=0;i<data.getDecrypted().length;i++) {
-			//System.out.print(data.getDecrypted()[i]+" ");
-			if(data.getDecrypted()[i] >0) {
+			int aux;
+			System.out.print(data.getDecrypted()[i]+"\n");
+			if(data.getDecrypted()[i] >=0) {
 				typeOfByte = 1;
 			}else {
 				typeOfByte = -1;
 			}
 			encrypted+=(typeOfByte==1)?1:0;
-			data.getDecrypted()[i]*=typeOfByte;
+			
+			original = bytes[i];
+			aux=bytes[i]*typeOfByte;
 			while(true) {
-				rand = (int) ((Math.random() * ((alphabet.getValues().size() - 0) + 1)) + 0);
+				//Thread.sleep(1);
+				rand = (int) ((Math.random() * (((alphabet.getValues().size()-1) - 0) + 1)) + 0);
 				try {
-					if(data.getDecrypted()[i] >= alphabet.getValues().get(rand) && alphabet.getValues().get(rand) != 0) {
-						data.getDecrypted()[i]-=alphabet.getValues().get(rand);
+					System.out.println("i:"+i+"/"+data.getDecrypted().length+" "+aux+" "+alphabet.getValues().get(rand)+" "+valueBefore+" "+((100/data.getDecrypted().length)*i)+"% "+typeOfByte);
+					if(aux >= alphabet.getValues().get(rand) && alphabet.getValues().get(rand) != 0) {
+						aux-=alphabet.getValues().get(rand);
 						encrypted +=alphabet.getKeys().get(rand);
 					}
-					if(data.getDecrypted()[i] == 0) {
+					if(aux == 0) {
 						encrypted+=".";
 						typeOfByte = 0;
+						System.out.println("end");
 						break;
 					}
+					if(aux < 0) {
+						Thread.sleep(1000);
+						System.out.println(data.getDecrypted()[i]+" "+typeOfByte);
+						aux *=typeOfByte;
+					}
 				}catch(Exception e) {
-					//e.printStackTrace();
+					System.out.println(rand);
+					System.out.println(alphabet.getValues().size());
+					e.printStackTrace();
 				}
 			}
+			valueBefore = original;
 		}
 		//System.out.println();
 		//System.out.println("encrypted:"+encrypted);

@@ -15,4 +15,7 @@ public class DataDao {
 		data = encrypter.encrypt(data, alphabet);
 		Files.write(Paths.get(filename+"."+data.getKey()),data.getEncrypted().getBytes());
 	}
+	public void read(String path) {
+		
+	}
 }
