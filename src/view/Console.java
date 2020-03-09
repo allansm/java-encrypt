@@ -25,15 +25,18 @@ public class Console {
 			break;
 		}
 	}
+	public void test()throws Exception {
+		byte[] b = Files.readAllBytes(Paths.get("test.25"));
+		System.out.println(new String(b));
+		Data data = new Data();
+		data.setEncrypted(new String(b));
+		data = new Encrypter().decrypt(data, new Alphabet(25));
+		Files.write(Paths.get("test"), data.getDecrypted());
+	}
 	public static void main(String[] args) {
 		try {
 			//new Console().run();
-			byte[] b = Files.readAllBytes(Paths.get("tete.21"));
-			System.out.println(new String(b));
-			Data data = new Data();
-			data.setEncrypted(new String(b));
-			data = new Encrypter().decrypt(data, new Alphabet(21));
-			Files.write(Paths.get("tete.jpg"), data.getDecrypted());
+			//new Console().test();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
