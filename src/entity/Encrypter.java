@@ -7,17 +7,31 @@ public class Encrypter {
 	public int generateKey() {
 		return (int)(Math.random() * ((33 - 10) + 1)) + 10;
 	}
-	public void brokenArray(byte[] array) {
-		int[] sizes = new int[9];
-		for(int i=0;i<10;i++) {
-			sizes[i] = array.length/i+1;
-		}
-		int start =0;
-		byte[][] bytes = new byte[99][99];
-		for(int i=0;i<9;i++) {
-			for(int ii=start;ii<sizes[i];ii++) {
-				
+	public byte[][] arraySmash(byte[] array) {
+		try {
+			int[] sizes = new int[9];
+			for(int i=0;i<10;i++) {
+				sizes[i] = array.length/i+1;
 			}
+			//int start =0;
+		
+			byte[][] bytes = new byte[array.length/10][9];
+			int count = 0;
+			for(int i=0;i<9;i++) {
+				for(int ii=0;ii<array.length/10;ii++) {
+					bytes[ii][i] = array[count++];
+				}
+			}
+			return bytes;
+		}catch(Exception e) {
+			System.out.println(array.length);
+			byte[][] bytes = new byte[array.length][1];
+			for(int i=0;i<array.length;i++) {
+				//System.out.println(array[i]);
+				bytes[i][0] = array[i];
+				//System.out.println("end");
+			}
+			return bytes;
 		}
 	}
 	public Data encrypt(Data data,Alphabet alphabet)throws Exception {

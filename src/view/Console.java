@@ -27,13 +27,13 @@ public class Console {
 	}
 	public static void main(String[] args) {
 		try {
-			new Console().run();
-			/*byte[] b = Files.readAllBytes(Paths.get("te.18"));
+			//new Console().run();
+			byte[] b = Files.readAllBytes(Paths.get("tete.21"));
 			System.out.println(new String(b));
 			Data data = new Data();
 			data.setEncrypted(new String(b));
-			data = new Encrypter().decrypt(data, new Alphabet(18));
-			Files.write(Paths.get("te.txt"), data.getDecrypted());*/
+			data = new Encrypter().decrypt(data, new Alphabet(21));
+			Files.write(Paths.get("tete.jpg"), data.getDecrypted());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
