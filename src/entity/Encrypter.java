@@ -163,21 +163,27 @@ public class Encrypter {
 		System.out.println("time:"+((System.currentTimeMillis()-st)/1000));
 		return data;
 	}
-	private String enc = "";
-	
-	public String getEnc() {
+	private List<String> enc;
+	private int index=0;
+	private List<String> getEnc() {
 		return enc;
 	}
-	public void setEnc(String enc) {
-		this.enc = enc;
+	
+	private synchronized void addToEnc(String enc,int i) {
+		this.enc.add(i,enc);
 	}
-	public synchronized void addToEnc(String enc) {
-		this.enc += enc;
+	private synchronized void addIndex() {
+		this.index+=1;
+	}
+	private synchronized int getIndex() {
+		System.out.println("index:"+index);
+		return this.index;
 	}
 	public Data fastestEncrypt(Data data,Alphabet alphabet)throws Exception {
 		byte[][] bytes = arraySmash(data.getDecrypted());
 		byte[] current = new byte[data.getDecrypted().length/10];
 		List<Data> list = new ArrayList<>();
+		enc = new ArrayList<>();
 		for(int i=0;i<10;i++) {
 			try {
 				for(int ii=0;true;ii++) {
@@ -191,24 +197,31 @@ public class Encrypter {
 		}
 		String encrypted = "";
 		for(Data d:list) {
-			Thread.sleep(100);
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
 					try {
+						int i = getIndex();
+						addIndex();
 						String txt = fastEncrypt(d, alphabet).getEncrypted();
-						addToEnc(txt);
+						addToEnc(txt,i);
 						System.err.println("acabou thread");
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+						System.exit(0);
 					}
 				}
 			}).start();
+			//Thread.sleep(100);
+			//break;
 		}
 		new Scanner(System.in).nextLine();
-		data.setEncrypted(getEnc());
+		for(String s:getEnc()) {
+			encrypted+=s;
+		}
+		data.setEncrypted(encrypted);
 		return data;
 	}
 	public List<String> split(String encrypted){

@@ -35,9 +35,8 @@ public class Console {
 	}
 	public static void main(String[] args) {
 		try {
-			
-			//new Console().run();
-			new Console().test();
+			new Console().run();
+			//new Console().test();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
