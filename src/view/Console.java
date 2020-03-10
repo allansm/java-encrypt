@@ -2,6 +2,8 @@ package view;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import entity.Alphabet;
@@ -26,17 +28,30 @@ public class Console {
 		}
 	}
 	public void test()throws Exception {
-		byte[] b = Files.readAllBytes(Paths.get("aaba.16"));
+		byte[] b = Files.readAllBytes(Paths.get("asv.14"));
 		System.out.println(new String(b));
 		Data data = new Data();
 		data.setEncrypted(new String(b));
-		data = new Encrypter().decrypt(data, new Alphabet(16));
+		data = new Encrypter().decrypt(data, new Alphabet(14));
 		Files.write(Paths.get("testa"), data.getDecrypted());
+	}
+	public void test2() {
+		List<String> lista = new ArrayList<>();
+		for(int i=0;i<3;i++) {
+			lista.add(i, "");
+		}
+		lista.add(2, "2");
+		lista.add(1, "1");
+		lista.add(0, "0");
+		for(String s:lista) {
+			System.out.println(s);
+		}
 	}
 	public static void main(String[] args) {
 		try {
 			new Console().run();
 			//new Console().test();
+			//new Console().test2();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
