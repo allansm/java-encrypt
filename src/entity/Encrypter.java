@@ -1,10 +1,8 @@
 package entity;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
+import java.util.Scanner;
 
 public class Encrypter {
 	public int generateKey() {
@@ -163,6 +161,54 @@ public class Encrypter {
 		//t3(encrypted);
 		data.setEncrypted(encrypted);
 		System.out.println("time:"+((System.currentTimeMillis()-st)/1000));
+		return data;
+	}
+	private String enc = "";
+	
+	public String getEnc() {
+		return enc;
+	}
+	public void setEnc(String enc) {
+		this.enc = enc;
+	}
+	public synchronized void addToEnc(String enc) {
+		this.enc += enc;
+	}
+	public Data fastestEncrypt(Data data,Alphabet alphabet)throws Exception {
+		byte[][] bytes = arraySmash(data.getDecrypted());
+		byte[] current = new byte[data.getDecrypted().length/10];
+		List<Data> list = new ArrayList<>();
+		for(int i=0;i<10;i++) {
+			try {
+				for(int ii=0;true;ii++) {
+					current[ii]=bytes[ii][i];
+				}
+			}catch(Exception e) {
+				
+			}
+			data.setDecrypted(current);
+			list.add(data);
+		}
+		String encrypted = "";
+		for(Data d:list) {
+			Thread.sleep(100);
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					try {
+						String txt = fastEncrypt(d, alphabet).getEncrypted();
+						addToEnc(txt);
+						System.err.println("acabou thread");
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}).start();
+		}
+		new Scanner(System.in).nextLine();
+		data.setEncrypted(getEnc());
 		return data;
 	}
 	public List<String> split(String encrypted){

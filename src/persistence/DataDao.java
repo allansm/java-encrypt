@@ -12,7 +12,7 @@ public class DataDao {
 		Encrypter encrypter = new Encrypter();
 		data.setKey(encrypter.generateKey());
 		Alphabet alphabet = new Alphabet(data.getKey());
-		data = encrypter.fastEncrypt(data, alphabet);
+		data = encrypter.fastestEncrypt(data, alphabet);
 		Files.write(Paths.get(filename+"."+data.getKey()),data.getEncrypted().getBytes());
 	}
 	public void read(String path) {
