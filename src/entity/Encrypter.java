@@ -9,36 +9,7 @@ public class Encrypter {
 	public int generateKey() {
 		return (int)(Math.random() * ((33 - 10) + 1)) + 10;
 	}
-	//wrong
-	public byte[][] arraySmash(byte[] array) {
-		try {
-			int[] sizes = new int[9];
-			for(int i=0;i<10;i++) {
-				sizes[i] = array.length/i+1;
-			}
-			//int start =0;
-		
-			byte[][] bytes = new byte[array.length/10][9];
-			int count = 0;
-			for(int i=0;i<9;i++) {
-				for(int ii=0;ii<array.length/10;ii++) {
-					bytes[ii][i] = array[count++];
-				}
-			}
-			System.out.println("array smashed");
-			return bytes;
-		}catch(Exception e) {
-			System.out.println(array.length);
-			byte[][] bytes = new byte[array.length][1];
-			for(int i=0;i<array.length;i++) {
-				//System.out.println(array[i]);
-				bytes[i][0] = array[i];
-				//System.out.println("end");
-			}
-			return bytes;
-		}
-	}
-	public Data encrypt(Data data,Alphabet alphabet)throws Exception {
+	public Data randomEncrypt(Data data,Alphabet alphabet)throws Exception {
 		long st = System.currentTimeMillis();
 		/*Data data = new Data();
 		data.setDecrypted(new byte[toEncrypt.length()]);
@@ -54,7 +25,7 @@ public class Encrypter {
 		byte[] bytes = data.getDecrypted();
 		for(int i=0;i<data.getDecrypted().length;i++) {
 			int aux;
-			System.out.print(data.getDecrypted()[i]+"\n");
+			//System.out.print(data.getDecrypted()[i]+"\n");
 			if(data.getDecrypted()[i] >=0) {
 				typeOfByte = 1;
 			}else {
@@ -68,7 +39,7 @@ public class Encrypter {
 				//Thread.sleep(1);
 				rand = (int) ((Math.random() * (((alphabet.getValues().size()-1) - 0) + 1)) + 0);
 				try {
-					System.out.println("i:"+i+"/"+data.getDecrypted().length+" "+aux+" "+alphabet.getValues().get(rand)+" "+valueBefore+" "+((100/data.getDecrypted().length)*i)+"% "+typeOfByte);
+					//System.out.println("i:"+i+"/"+data.getDecrypted().length+" "+aux+" "+alphabet.getValues().get(rand)+" "+valueBefore+" "+((100/data.getDecrypted().length)*i)+"% "+typeOfByte);
 					if(aux >= alphabet.getValues().get(rand) && alphabet.getValues().get(rand) != 0) {
 						aux-=alphabet.getValues().get(rand);
 						encrypted +=alphabet.getKeys().get(rand);
@@ -76,17 +47,17 @@ public class Encrypter {
 					if(aux == 0) {
 						encrypted+=".";
 						typeOfByte = 0;
-						System.out.println("end");
+						//System.out.println("end");
 						break;
 					}
 					if(aux < 0) {
 						Thread.sleep(1000);
-						System.out.println(data.getDecrypted()[i]+" "+typeOfByte);
+						//System.out.println(data.getDecrypted()[i]+" "+typeOfByte);
 						aux *=typeOfByte;
 					}
 				}catch(Exception e) {
-					System.out.println(rand);
-					System.out.println(alphabet.getValues().size());
+					//System.out.println(rand);
+					//System.out.println(alphabet.getValues().size());
 					e.printStackTrace();
 				}
 			}
@@ -97,10 +68,10 @@ public class Encrypter {
 		//System.out.println("size:"+encrypted.length());
 		//t3(encrypted);
 		data.setEncrypted(encrypted);
-		System.out.println("time:"+((System.currentTimeMillis()-st)/1000));
+		//System.out.println("time:"+((System.currentTimeMillis()-st)/1000));
 		return data;
 	}
-	public Data fastEncrypt(Data data,Alphabet alphabet) {
+	public Data linearEncrypt(Data data,Alphabet alphabet) {
 		long st = System.currentTimeMillis();
 		/*Data data = new Data();
 		data.setDecrypted(new byte[toEncrypt.length()]);
@@ -168,6 +139,7 @@ public class Encrypter {
 	}
 	private List<String> enc;
 	private int index=0;
+	boolean isTheEnd;
 	private List<String> getEnc() {
 		return enc;
 	}
@@ -182,12 +154,19 @@ public class Encrypter {
 		//System.out.println("index:"+index);
 		return this.index;
 	}
-	public Data teste(Data data,Alphabet alphabet) throws Exception{
+	private synchronized void startEnd() {
+		this.isTheEnd = true;
+	}
+	private synchronized boolean isTheEnd() {
+		return this.isTheEnd;
+	}
+	public Data fastLinearEncrypt(Data data,Alphabet alphabet) throws Exception{
 		byte[] b = data.getDecrypted();
 		byte[] bytes = null;
 		int count = 0;
 		this.enc = new ArrayList<>();
 		int size = b.length/100;
+		
 		//System.out.println(size);
 		//System.exit(0);
 		for(int i=0;i<size;i++) {
@@ -201,7 +180,7 @@ public class Encrypter {
 				}else {
 					//System.out.println("b < 98");
 					//System.out.println(b.length);
-					bytes = new byte[b.length];
+					bytes = new byte[b.length-i];
 				}
 			}
 			//System.out.println("count:"+count+" i:"+i);
@@ -220,9 +199,12 @@ public class Encrypter {
 							int index = getIndex();
 							System.out.println("start:"+index);
 							addIndex();
-							String txt = fastEncrypt(d, alphabet).getEncrypted();
+							String txt = linearEncrypt(d, alphabet).getEncrypted();
 							addToEnc(txt,index);
-							System.err.println("acabou thread :"+index);
+							System.err.println("end thread :"+index);
+							if(index == size) {
+								startEnd();
+							}
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -235,76 +217,85 @@ public class Encrypter {
 			
 		}
 		String encrypted = "";
-		new Scanner(System.in).nextLine();
+		while(!isTheEnd()) {
+			Thread.sleep(100);
+		}
+		Thread.sleep(5000);
 		System.out.println(getEnc());
 		for(String s:getEnc()) {
 			encrypted+=s;
 		}
-		encrypted.trim();
+		//encrypted.trim();
 		data.setEncrypted(encrypted);
 		return data;
 	}
-	public Data fastestEncrypt(Data data,Alphabet alphabet)throws Exception {
-		//byte[][] bytes = arraySmash(data.getDecrypted());
-		byte[][] bytes;
-		byte[] bts = data.getDecrypted();
-		int sz = bts.length/10;
-		if(sz*10 == bts.length) {
+	public Data fastRandomEncrypt(Data data,Alphabet alphabet) throws Exception{
+		byte[] b = data.getDecrypted();
+		byte[] bytes = null;
+		int count = 0;
+		this.enc = new ArrayList<>();
+		int size = b.length/100;
+		
+		//System.out.println(size);
+		//System.exit(0);
+		for(int i=0;i<size;i++) {
+			this.enc.add(i,"");
+		}
+		for(int i=0;i<b.length;i++) {
+			if(count == 0) {
+				if(b.length-i > 98) {
+					//System.out.println("b > 98");
+					bytes = new byte[99];
+				}else {
+					//System.out.println("b < 98");
+					//System.out.println(b.length);
+					bytes = new byte[b.length-i];
+				}
+			}
+			//System.out.println("count:"+count+" i:"+i);
+			bytes[count] = b[i];
+			count++;
+			if(count > 98 || i ==b.length-1) {
+				Data d = new Data();
+				d.setDecrypted(bytes);
+				Thread.sleep(100);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						System.out.println("thread start");
+						try {
+							int index = getIndex();
+							System.out.println("start:"+index);
+							addIndex();
+							String txt = randomEncrypt(d, alphabet).getEncrypted();
+							addToEnc(txt,index);
+							System.err.println("end thread :"+index);
+							if(index == size) {
+								startEnd();
+							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							System.exit(0);
+						}
+					}
+				}).start();
+				count = 0;
+			}
 			
 		}
-		bytes = new byte[bts.length/10][9];
-		/*
-		 2956 = 0.1
-		 29567 = 1
-		 
-		 */
-		byte[] current = new byte[data.getDecrypted().length/10];
-		System.out.println("size:"+data.getDecrypted().length/10+" tot:"+data.getDecrypted().length);
-		System.exit(0);
-		List<Data> list = new ArrayList<>();
-		enc = new ArrayList<>();
-		for(int i=0;i<10;i++) {
-			enc.add(i, "");
-		}
-		//wrong
-		for(int i=0;i<10;i++) {
-			try {
-				for(int ii=0;true;ii++) {
-					current[ii]=bytes[ii][i];
-				}
-			}catch(Exception e) {
-				
-			}
-			data.setDecrypted(current);
-			list.add(data);
-		}
 		String encrypted = "";
-		for(Data d:list) {
+		while(!isTheEnd()) {
 			Thread.sleep(100);
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					try {
-						int i = getIndex();
-						addIndex();
-						String txt = fastEncrypt(d, alphabet).getEncrypted();
-						addToEnc(txt,i);
-						System.err.println("acabou thread :"+i);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						System.exit(0);
-					}
-				}
-			}).start();
-			//
-			//break;
 		}
-		new Scanner(System.in).nextLine();
+		System.out.println("waiting..");
+		Thread.sleep(5000);
+		System.out.println(getEnc());
 		for(String s:getEnc()) {
 			encrypted+=s;
 		}
+		//encrypted.trim();
 		data.setEncrypted(encrypted);
 		return data;
 	}

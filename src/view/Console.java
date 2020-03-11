@@ -28,11 +28,11 @@ public class Console {
 		}
 	}
 	public void test()throws Exception {
-		byte[] b = Files.readAllBytes(Paths.get("as.33"));
+		byte[] b = Files.readAllBytes(Paths.get("test.20"));
 		System.out.println(new String(b));
 		Data data = new Data();
 		data.setEncrypted(new String(b));
-		data = new Encrypter().decrypt(data, new Alphabet(33));
+		data = new Encrypter().decrypt(data, new Alphabet(20));
 		Files.write(Paths.get("testa"), data.getDecrypted());
 	}
 	public void test2() {
