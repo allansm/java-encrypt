@@ -181,8 +181,72 @@ public class Encrypter {
 		//System.out.println("index:"+index);
 		return this.index;
 	}
+	public Data teste(Data data,Alphabet alphabet) {
+		byte[] b = data.getDecrypted();
+		byte[] bytes = null;
+		int count = 0;
+		this.enc = new ArrayList<>();
+		for(int i=0;i<b.length;i++) {
+			if(count == 0) {
+				if(b.length-i > 98) {
+					System.out.println("b > 98");
+					bytes = new byte[99];
+				}else {
+					System.out.println("b < 98");
+					System.out.println(b.length);
+					bytes = new byte[b.length];
+				}
+			}
+			System.out.println("count:"+count+" i:"+i);
+			bytes[count] = b[i];
+			if(count > 98 || i ==b.length-1) {
+				Data d = new Data();
+				d.setDecrypted(bytes);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						System.out.println("thread start");
+						try {
+							int index = getIndex();
+							System.out.println("start:"+index);
+							addIndex();
+							String txt = fastEncrypt(d, alphabet).getEncrypted();
+							addToEnc(txt,index);
+							System.err.println("acabou thread :"+index);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							System.exit(0);
+						}
+					}
+				}).start();
+				count = 0;
+			}
+			count++;
+		}
+		String encrypted = "";
+		new Scanner(System.in).nextLine();
+		for(String s:getEnc()) {
+			encrypted+=s;
+		}
+		data.setEncrypted(encrypted);
+		return data;
+	}
 	public Data fastestEncrypt(Data data,Alphabet alphabet)throws Exception {
-		byte[][] bytes = arraySmash(data.getDecrypted());
+		//byte[][] bytes = arraySmash(data.getDecrypted());
+		byte[][] bytes;
+		byte[] bts = data.getDecrypted();
+		int sz = bts.length/10;
+		if(sz*10 == bts.length) {
+			
+		}
+		bytes = new byte[bts.length/10][9];
+		/*
+		 2956 = 0.1
+		 29567 = 1
+		 
+		 */
 		byte[] current = new byte[data.getDecrypted().length/10];
 		System.out.println("size:"+data.getDecrypted().length/10+" tot:"+data.getDecrypted().length);
 		System.exit(0);
@@ -265,5 +329,12 @@ public class Encrypter {
 		}
 		data.setDecrypted(bytes);
 		return data;
+	}
+	public static void main(String[]args) {
+		Data data = new Data();
+		data.setDecrypted("test".getBytes());
+		Alphabet alphabet = new Alphabet(new Encrypter().generateKey());
+		data.setEncrypted(new Encrypter().teste(data, alphabet).getEncrypted());
+		System.out.println(new String(new Encrypter().decrypt(data, alphabet).getDecrypted()));
 	}
 }
