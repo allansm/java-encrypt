@@ -1,5 +1,6 @@
 package entity;
 
+import java.net.StandardSocketOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -181,27 +182,35 @@ public class Encrypter {
 		//System.out.println("index:"+index);
 		return this.index;
 	}
-	public Data teste(Data data,Alphabet alphabet) {
+	public Data teste(Data data,Alphabet alphabet) throws Exception{
 		byte[] b = data.getDecrypted();
 		byte[] bytes = null;
 		int count = 0;
 		this.enc = new ArrayList<>();
+		int size = b.length/100;
+		//System.out.println(size);
+		//System.exit(0);
+		for(int i=0;i<size;i++) {
+			this.enc.add(i,"");
+		}
 		for(int i=0;i<b.length;i++) {
 			if(count == 0) {
 				if(b.length-i > 98) {
-					System.out.println("b > 98");
+					//System.out.println("b > 98");
 					bytes = new byte[99];
 				}else {
-					System.out.println("b < 98");
-					System.out.println(b.length);
+					//System.out.println("b < 98");
+					//System.out.println(b.length);
 					bytes = new byte[b.length];
 				}
 			}
-			System.out.println("count:"+count+" i:"+i);
+			//System.out.println("count:"+count+" i:"+i);
 			bytes[count] = b[i];
+			count++;
 			if(count > 98 || i ==b.length-1) {
 				Data d = new Data();
 				d.setDecrypted(bytes);
+				Thread.sleep(100);
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
@@ -223,13 +232,15 @@ public class Encrypter {
 				}).start();
 				count = 0;
 			}
-			count++;
+			
 		}
 		String encrypted = "";
 		new Scanner(System.in).nextLine();
+		System.out.println(getEnc());
 		for(String s:getEnc()) {
 			encrypted+=s;
 		}
+		encrypted.trim();
 		data.setEncrypted(encrypted);
 		return data;
 	}
@@ -330,11 +341,11 @@ public class Encrypter {
 		data.setDecrypted(bytes);
 		return data;
 	}
-	public static void main(String[]args) {
+	/*public static void main(String[]args) {
 		Data data = new Data();
 		data.setDecrypted("test".getBytes());
 		Alphabet alphabet = new Alphabet(new Encrypter().generateKey());
 		data.setEncrypted(new Encrypter().teste(data, alphabet).getEncrypted());
 		System.out.println(new String(new Encrypter().decrypt(data, alphabet).getDecrypted()));
-	}
+	}*/
 }

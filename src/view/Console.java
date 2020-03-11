@@ -28,11 +28,11 @@ public class Console {
 		}
 	}
 	public void test()throws Exception {
-		byte[] b = Files.readAllBytes(Paths.get("asv.14"));
+		byte[] b = Files.readAllBytes(Paths.get("as.33"));
 		System.out.println(new String(b));
 		Data data = new Data();
 		data.setEncrypted(new String(b));
-		data = new Encrypter().decrypt(data, new Alphabet(14));
+		data = new Encrypter().decrypt(data, new Alphabet(33));
 		Files.write(Paths.get("testa"), data.getDecrypted());
 	}
 	public void test2() {
@@ -49,8 +49,8 @@ public class Console {
 	}
 	public static void main(String[] args) {
 		try {
-			new Console().run();
-			//new Console().test();
+			//new Console().run();
+			new Console().test();
 			//new Console().test2();
 		}catch(Exception e) {
 			e.printStackTrace();
