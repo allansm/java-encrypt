@@ -22,7 +22,7 @@ public class Console {
 			Data data = new Data();
 			data.setDecrypted(Files.readAllBytes(Paths.get(url)));
 			DataDao dataDao = new DataDao();
-			dataDao.insert(data, fn);
+			dataDao.write(data, fn,Encrypter.TYPE.FASTRANDOM);
 			System.out.println("\nok");
 			break;
 		}
@@ -50,7 +50,7 @@ public class Console {
 	public static void main(String[] args) {
 		try {
 			//new Console().run();
-			new Console().test();
+			//new Console().test();
 			//new Console().test2();
 		}catch(Exception e) {
 			e.printStackTrace();

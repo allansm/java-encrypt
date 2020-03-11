@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Encrypter {
+	public static enum TYPE{RANDOM,LINEAR,FASTRANDOM,FASTLINEAR};
 	public int generateKey() {
 		return (int)(Math.random() * ((33 - 10) + 1)) + 10;
 	}
@@ -139,7 +140,7 @@ public class Encrypter {
 	}
 	private List<String> enc;
 	private int index=0;
-	boolean isTheEnd;
+	private boolean isTheEnd;
 	private List<String> getEnc() {
 		return enc;
 	}
