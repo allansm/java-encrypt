@@ -22,6 +22,7 @@ public class Console {
 	private String customKey;
 	private byte[] decrypted;
 	private int key;
+	private Encrypter.TYPE type = Encrypter.TYPE.FASTRANDOM;
 	
 	public void setInputFileUrl(Scanner scanner) {
 		System.out.print("type the input file url:");
@@ -35,6 +36,23 @@ public class Console {
 		System.out.print("type key number:");
 		this.key = scanner.nextInt();
 	}
+	public void setEncrypterType(Scanner scanner) throws Exception{
+		System.out.println("1:"+Encrypter.TYPE.RANDOM.name()+" >> encrypt with random characters based on key");
+		System.out.println("2:"+Encrypter.TYPE.LINEAR.name()+" >> encrypt with same characters based on key");
+		System.out.println("3:"+Encrypter.TYPE.FASTRANDOM.name()+" >> encrypt with random characters based on key using threads");
+		System.out.println("4:"+Encrypter.TYPE.FASTLINEAR.name()+" >> encrypt with same characters based on key using threads");
+		System.out.print("type nº:");
+		int type = scanner.nextInt();
+		if(type == 1) {
+			this.type = Encrypter.TYPE.RANDOM;
+		}else if(type == 2) {
+			this.type = Encrypter.TYPE.LINEAR;
+		}else if(type == 3) {
+			this.type = Encrypter.TYPE.FASTRANDOM;
+		}else if(type == 4) {
+			this.type = Encrypter.TYPE.FASTLINEAR;
+		}
+	}
 	public void setCustomKey() throws Exception {
 		byte[] b = Files.readAllBytes(Paths.get(inputFileUrl));
 		Data data = new Data();
@@ -45,7 +63,7 @@ public class Console {
 		Data data = new Data();
 		data.setDecrypted(Files.readAllBytes(Paths.get(inputFileUrl)));
 		DataDao dataDao = new DataDao();
-		dataDao.write(data, outputFileUrl,Encrypter.TYPE.FASTRANDOM);
+		dataDao.write(data, outputFileUrl,type);
 		System.out.println("\nok");
 	}
 	public void decryptFile() throws Exception{
@@ -53,14 +71,13 @@ public class Console {
 		Data data = new Data();
 		data.setEncrypted(new String(b));
 		data = new Encrypter().decrypt(data, new Alphabet(key));
-		decrypted = data.getDecrypted();
 		Files.write(Paths.get(outputFileUrl), data.getDecrypted());
 	}
 	public void encryptUsingCustomKey() throws Exception{
 		Data data = new Data();
 		data.setDecrypted(Files.readAllBytes(Paths.get(inputFileUrl)));
 		DataDao dataDao = new DataDao();
-		dataDao.write(data, outputFileUrl,Encrypter.TYPE.FASTRANDOM,new Alphabet(customKey));
+		dataDao.write(data, outputFileUrl,type,new Alphabet(customKey));
 		System.out.println("\nok");
 	}
 	public void decryptUsingCustomKey() throws Exception{
@@ -68,14 +85,13 @@ public class Console {
 		Data data = new Data();
 		data.setEncrypted(new String(b));
 		data = new Encrypter().decrypt(data, new Alphabet(customKey));
-		decrypted = data.getDecrypted();
 		Files.write(Paths.get(outputFileUrl), data.getDecrypted());
 	}
 	public void decryptWithoutSave(Scanner scanner)throws Exception {
 		byte[] b = Files.readAllBytes(Paths.get(inputFileUrl));
 		Data data = new Data();
 		data.setEncrypted(new String(b));
-		System.out.println("type of decryptation (1-normal key,2-custom key):");
+		System.out.print("type of decryptation (1-normal key,2-custom key):");
 		int format = scanner.nextInt();
 		if(format == 1) {
 			data = new Encrypter().decrypt(data, new Alphabet(key));
@@ -83,6 +99,22 @@ public class Console {
 			data = new Encrypter().decrypt(data, new Alphabet(customKey));
 		}
 		decrypted = data.getDecrypted();
+	}
+	public void decryptDecrypt(Scanner scanner) {
+		byte[] b = decrypted;
+		Data data = new Data();
+		data.setEncrypted(new String(b));
+		System.out.print("type of decryptation (1-normal key,2-custom key):");
+		int format = scanner.nextInt();
+		if(format == 1) {
+			data = new Encrypter().decrypt(data, new Alphabet(key));
+		}else if(format == 2) {
+			data = new Encrypter().decrypt(data, new Alphabet(customKey));
+		}
+		decrypted = data.getDecrypted();
+	}
+	public void showDecrypted() {
+		System.out.println(new String(decrypted));
 	}
 	public void useDecryptedOnLocalhost() throws Exception {
 		ServerSocket server = new ServerSocket(80);
@@ -95,7 +127,6 @@ public class Console {
 				i=0;
 			}
 		}
-		
 		ou.write(decrypted);
 		Thread.sleep(1000);
 		ou.close();
@@ -108,6 +139,7 @@ public class Console {
 		System.out.println("key:"+key);
 		System.out.println("customKey:"+customKey);
 		System.out.println("decrypted:"+decrypted);
+		System.out.println("encrypterType:"+type.name());
 	}
 	public void help() {
 		List<String> help = new ArrayList<>();
@@ -116,10 +148,15 @@ public class Console {
 		help.add("setOutputFileUrl >> set variable used to write");
 		help.add("setKey >> set encrypter key used to decrypt a file");
 		help.add("setCustomKey >> read a file that contains a custom key decrypt and store as variable, require input output files and key");
+		help.add("setEncrypterType >> select the encryptation mode");
 		help.add("encryptFile >> read a file and encrypt a new one");
 		help.add("decryptFile >> read a file and decrypt a new one");
 		help.add("encryptUsingCustomKey >> read a file and encrypt using custom key stored");
 		help.add("decryptUsingCustomKey >> read a file and decrypt using custom key stored");
+		help.add("decryptWithoutSave >>  read a file and decrypt and store as variable");
+		help.add("decryptDecrypt >> decrypt value stored on variable decrypt");
+		help.add("showDecrypted >> show value inside decrypt");
+		help.add("useDecryptedOnLocalhost >> use data stored on variable decrypt on http://localhost");
 		help.add("showVars >> show variables and values");
 		for(String s:help) {
 			System.out.println(s);
@@ -143,6 +180,9 @@ public class Console {
 			}else if(op.equals("setCustomKey")) {
 				setCustomKey();
 				showVars();
+			}else if(op.equals("setEncrypterType")) {
+				setEncrypterType(scanner);
+				showVars();
 			}else if(op.equals("encryptFile"))  {
 				encryptFile();
 			}else if(op.equals("decryptFile"))  {
@@ -151,15 +191,23 @@ public class Console {
 				encryptUsingCustomKey();
 			}else if(op.equals("decryptUsingCustomKey")) {
 				decryptUsingCustomKey();
+			}else if(op.equals("decryptDecrypt")) {
+				decryptDecrypt(scanner);
+			}else if(op.equals("showDecrypted")) {
+				showDecrypted();
 			}else if(op.equals("decryptWithoutSave")) {
 				decryptWithoutSave(scanner);
 				showVars();
-			}else if(op.equals("showVars")) {
-				showVars();
 			}else if(op.equals("useDecryptedOnLocalhost")) {
 				useDecryptedOnLocalhost();
+			}else if(op.equals("showVars")) {
+				showVars();
 			}else if(op.equals("help")) {
 				help();
+			}else if(op.equals("bye")) {
+				System.exit(0);
+			}else {
+				System.out.println("type help to get commands.");
 			}
 		}
 	}
