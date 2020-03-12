@@ -60,7 +60,7 @@ public class Alphabet {
 	}
 	public static void main(String[]args) throws Exception{
 		Data d = new Data();
-		d.setDecrypted(".x:1;.$:2;.&:4;.y:8;.@:16;.!:32;.*:64;.z:128;".getBytes());
+		d.setDecrypted(".q:1;.w:2;.e:4;.r:8;.t:16;.y:32;.x:64;.z:128;".getBytes());
 		d = new Encrypter().fastRandomEncrypt(d, new Alphabet(10));
 		d.setDecrypted(null);
 		Alphabet alph = new Alphabet(new String(new Encrypter().decrypt(d, new Alphabet(10)).getDecrypted()));
