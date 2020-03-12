@@ -15,6 +15,7 @@ public class Console {
 	private String inputFileUrl;
 	private String outputFileUrl;
 	private String customKey;
+	private byte[] decrypted;
 	private int key;
 	
 	public void setInputFileUrl(Scanner scanner) {
@@ -47,6 +48,7 @@ public class Console {
 		Data data = new Data();
 		data.setEncrypted(new String(b));
 		data = new Encrypter().decrypt(data, new Alphabet(key));
+		decrypted = data.getDecrypted();
 		Files.write(Paths.get(outputFileUrl), data.getDecrypted());
 	}
 	public void encryptUsingCustomKey() throws Exception{
@@ -61,6 +63,7 @@ public class Console {
 		Data data = new Data();
 		data.setEncrypted(new String(b));
 		data = new Encrypter().decrypt(data, new Alphabet(customKey));
+		decrypted = data.getDecrypted();
 		Files.write(Paths.get(outputFileUrl), data.getDecrypted());
 	}
 	public void showVars() {
@@ -68,6 +71,7 @@ public class Console {
 		System.out.println("outputFileUrl:"+outputFileUrl);
 		System.out.println("key:"+key);
 		System.out.println("customKey:"+customKey);
+		System.out.println("decrypted:"+decrypted);
 	}
 	public void run() throws Exception{
 		Scanner scanner;
@@ -77,12 +81,16 @@ public class Console {
 			String op  = scanner.next();
 			if(op.equals("setInputFileUrl")) {
 				setInputFileUrl(scanner);
+				showVars();
 			}else if(op.equals("setOutputFileUrl")) {
 				setOutputFileUrl(scanner);
+				showVars();
 			}else if(op.equals("setKey")) {
 				setKey(scanner);
+				showVars();
 			}else if(op.equals("setCustomKey")) {
 				setCustomKey();
+				showVars();
 			}else if(op.equals("encryptFile"))  {
 				encryptFile();
 			}else if(op.equals("decryptFile"))  {
