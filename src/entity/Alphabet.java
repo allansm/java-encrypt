@@ -58,17 +58,4 @@ public class Alphabet {
 		this.keys = list2;
 		this.values = list3;
 	}
-	public static void main(String[]args) throws Exception{
-		Data d = new Data();
-		d.setDecrypted(".q:1;.w:2;.e:4;.r:8;.t:16;.y:32;.x:64;.z:128;".getBytes());
-		d = new Encrypter().fastRandomEncrypt(d, new Alphabet(10));
-		d.setDecrypted(null);
-		Alphabet alph = new Alphabet(new String(new Encrypter().decrypt(d, new Alphabet(10)).getDecrypted()));
-		Data data = new Data();
-		data.setDecrypted("Hello World".getBytes());
-		data = new Encrypter().fastRandomEncrypt(data, alph);
-		data.setDecrypted(null);
-		//System.out.println(new String(data.getDecrypted()));
-		System.out.println(new String(new Encrypter().decrypt(data, alph).getDecrypted()));
-	}
 }
