@@ -141,6 +141,22 @@ public class Console {
 		System.out.println("decrypted:"+decrypted);
 		System.out.println("encrypterType:"+type.name());
 	}
+	public void list(Scanner scanner) {
+		int i =0;
+		System.out.print("type the directory:");
+		String path = scanner.next();
+		try{
+			File f = new File(path);
+			while(true) {
+				if(!f.isDirectory()) {
+					System.out.println("type only directory here.");
+					break;
+				}
+				path = (f.getPath().endsWith("\\"))?f.getPath()+f.list()[i++]:f.getPath()+"\\"+f.list()[i++];
+				System.out.println(path);
+			}
+		}catch(Exception e) {}
+	}
 	public void help() {
 		List<String> help = new ArrayList<>();
 		help.add("comands:");
@@ -158,6 +174,8 @@ public class Console {
 		help.add("showDecrypted >> show value inside decrypt");
 		help.add("useDecryptedOnLocalhost >> use data stored on variable decrypt on http://localhost");
 		help.add("showVars >> show variables and values");
+		help.add("list >> list a directory");
+		help.add("bye >> exit");
 		for(String s:help) {
 			System.out.println(s);
 		}
@@ -165,49 +183,55 @@ public class Console {
 	public void run() throws Exception{
 		Scanner scanner;
 		while(true) {
-			System.out.print("10110101>");
-			scanner = new Scanner(System.in);
-			String op  = scanner.next();
-			if(op.equals("setInputFileUrl")) {
-				setInputFileUrl(scanner);
-				showVars();
-			}else if(op.equals("setOutputFileUrl")) {
-				setOutputFileUrl(scanner);
-				showVars();
-			}else if(op.equals("setKey")) {
-				setKey(scanner);
-				showVars();
-			}else if(op.equals("setCustomKey")) {
-				setCustomKey();
-				showVars();
-			}else if(op.equals("setEncrypterType")) {
-				setEncrypterType(scanner);
-				showVars();
-			}else if(op.equals("encryptFile"))  {
-				encryptFile();
-			}else if(op.equals("decryptFile"))  {
-				decryptFile();
-			}else if(op.equals("encryptUsingCustomKey"))  {
-				encryptUsingCustomKey();
-			}else if(op.equals("decryptUsingCustomKey")) {
-				decryptUsingCustomKey();
-			}else if(op.equals("decryptDecrypt")) {
-				decryptDecrypt(scanner);
-			}else if(op.equals("showDecrypted")) {
-				showDecrypted();
-			}else if(op.equals("decryptWithoutSave")) {
-				decryptWithoutSave(scanner);
-				showVars();
-			}else if(op.equals("useDecryptedOnLocalhost")) {
-				useDecryptedOnLocalhost();
-			}else if(op.equals("showVars")) {
-				showVars();
-			}else if(op.equals("help")) {
-				help();
-			}else if(op.equals("bye")) {
-				System.exit(0);
-			}else {
-				System.out.println("type help to get commands.");
+			try {
+				System.out.print("10110101>");
+				scanner = new Scanner(System.in);
+				String op  = scanner.next();
+				if(op.equals("setInputFileUrl")) {
+					setInputFileUrl(scanner);
+					showVars();
+				}else if(op.equals("setOutputFileUrl")) {
+					setOutputFileUrl(scanner);
+					showVars();
+				}else if(op.equals("setKey")) {
+					setKey(scanner);
+					showVars();
+				}else if(op.equals("setCustomKey")) {
+					setCustomKey();
+					showVars();
+				}else if(op.equals("setEncrypterType")) {
+					setEncrypterType(scanner);
+					showVars();
+				}else if(op.equals("encryptFile"))  {
+					encryptFile();
+				}else if(op.equals("decryptFile"))  {
+					decryptFile();
+				}else if(op.equals("encryptUsingCustomKey"))  {
+					encryptUsingCustomKey();
+				}else if(op.equals("decryptUsingCustomKey")) {
+					decryptUsingCustomKey();
+				}else if(op.equals("decryptDecrypt")) {
+					decryptDecrypt(scanner);
+				}else if(op.equals("showDecrypted")) {
+					showDecrypted();
+				}else if(op.equals("decryptWithoutSave")) {
+					decryptWithoutSave(scanner);
+					showVars();
+				}else if(op.equals("useDecryptedOnLocalhost")) {
+					useDecryptedOnLocalhost();
+				}else if(op.equals("showVars")) {
+					showVars();
+				}else if(op.equals("list")) {
+					list(scanner);
+				}else if(op.equals("help")) {
+					help();
+				}else if(op.equals("bye")) {
+					System.exit(0);
+				}else {
+					System.out.println("type help to get commands.");
+				}
+			}catch(Exception e) {
+				System.out.println("error:"+e.getMessage());
 			}
 		}
 	}
