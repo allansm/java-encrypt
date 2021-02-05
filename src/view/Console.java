@@ -182,58 +182,57 @@ public class Console {
 	}
 	public void run() throws Exception{
 		Scanner scanner;
-		while(true) {
-			try {
-				System.out.print("10110101>");
-				scanner = new Scanner(System.in);
-				String op  = scanner.next();
-				if(op.equals("setInputFileUrl")) {
-					setInputFileUrl(scanner);
-					showVars();
-				}else if(op.equals("setOutputFileUrl")) {
-					setOutputFileUrl(scanner);
-					showVars();
-				}else if(op.equals("setKey")) {
-					setKey(scanner);
-					showVars();
-				}else if(op.equals("setCustomKey")) {
-					setCustomKey();
-					showVars();
-				}else if(op.equals("setEncrypterType")) {
-					setEncrypterType(scanner);
-					showVars();
-				}else if(op.equals("encryptFile"))  {
-					encryptFile();
-				}else if(op.equals("decryptFile"))  {
-					decryptFile();
-				}else if(op.equals("encryptUsingCustomKey"))  {
-					encryptUsingCustomKey();
-				}else if(op.equals("decryptUsingCustomKey")) {
-					decryptUsingCustomKey();
-				}else if(op.equals("decryptDecrypt")) {
-					decryptDecrypt(scanner);
-				}else if(op.equals("showDecrypted")) {
-					showDecrypted();
-				}else if(op.equals("decryptWithoutSave")) {
-					decryptWithoutSave(scanner);
-					showVars();
-				}else if(op.equals("useDecryptedOnLocalhost")) {
-					useDecryptedOnLocalhost();
-				}else if(op.equals("showVars")) {
-					showVars();
-				}else if(op.equals("list")) {
-					list(scanner);
-				}else if(op.equals("help")) {
-					help();
-				}else if(op.equals("bye")) {
-					System.exit(0);
-				}else {
-					System.out.println("type help to get commands.");
-				}
-			}catch(Exception e) {
-				System.out.println("error:"+e.getMessage());
+		try {
+			System.out.print("10110101>");
+			scanner = new Scanner(System.in);
+			String op  = scanner.next();
+			if(op.equals("setInputFileUrl")) {
+				setInputFileUrl(scanner);
+				showVars();
+			}else if(op.equals("setOutputFileUrl")) {
+				setOutputFileUrl(scanner);
+				showVars();
+			}else if(op.equals("setKey")) {
+				setKey(scanner);
+				showVars();
+			}else if(op.equals("setCustomKey")) {
+				setCustomKey();
+				showVars();
+			}else if(op.equals("setEncrypterType")) {
+				setEncrypterType(scanner);
+				showVars();
+			}else if(op.equals("encryptFile"))  {
+				encryptFile();
+			}else if(op.equals("decryptFile"))  {
+				decryptFile();
+			}else if(op.equals("encryptUsingCustomKey"))  {
+				encryptUsingCustomKey();
+			}else if(op.equals("decryptUsingCustomKey")) {
+				decryptUsingCustomKey();
+			}else if(op.equals("decryptDecrypt")) {
+				decryptDecrypt(scanner);
+			}else if(op.equals("showDecrypted")) {
+				showDecrypted();
+			}else if(op.equals("decryptWithoutSave")) {
+				decryptWithoutSave(scanner);
+				showVars();
+			}else if(op.equals("useDecryptedOnLocalhost")) {
+				useDecryptedOnLocalhost();
+			}else if(op.equals("showVars")) {
+				showVars();
+			}else if(op.equals("list")) {
+				list(scanner);
+			}else if(op.equals("help")) {
+				help();
+			}else if(op.equals("bye")) {
+				System.exit(0);
+			}else {
+				System.out.println("type help to get commands.");
 			}
+		}catch(Exception e) {
+			System.out.println("error:"+e.getMessage());
 		}
+		run();
 	}
 	public static void main(String[] args) {
 		try {
