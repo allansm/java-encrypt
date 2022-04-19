@@ -54,10 +54,8 @@ public class Console {
 		}
 	}
 	public void setCustomKey() throws Exception {
-		byte[] b = Files.readAllBytes(Paths.get(inputFileUrl));
-		Data data = new Data();
-		data.setEncrypted(new String(b));
-		this.customKey = new String(new Encrypter().decrypt(data, new Alphabet(key)).getDecrypted());
+		System.out.print("custom key:");
+		this.customKey = new Scanner(System.in).next();//new String(new Encrypter().decrypt(data, new Alphabet(key)).getDecrypted());
 	}
 	public void encryptFile()throws Exception {
 		Data data = new Data();

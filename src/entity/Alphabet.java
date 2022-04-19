@@ -2,20 +2,25 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 public class Alphabet {
 	private List<Character> keys;
 	private List<Integer> values;
+	
 	public Alphabet(int key) {
 		setKeys(key);
 		setValues(key);
 	}
+	
 	public Alphabet(String format) {
 		custom(format);
 	}
+	
 	public List<Character> getKeys() {
 		return keys;
 	}
+	
 	private void setKeys(int key) {
 		this.keys = new ArrayList<>();
 		char start = 'a';
@@ -29,9 +34,11 @@ public class Alphabet {
 			this.keys.add(start++);
 		}
 	}
+	
 	public List<Integer> getValues() {
 		return values;
 	}
+	
 	private void setValues(int key) {
 		this.values = new ArrayList<>();
 		for(int i=1;i<=2;i++) {
@@ -44,18 +51,20 @@ public class Alphabet {
 			this.values.add(i);
 		}
 	}
-	//.a:1;.b:2;.c:4;.d:8;.e:16;.f:32;.g:64;.h:128;
+
 	public void custom(String format) {
-		List<String> list = TextFilter.findTxt(".", ";", format);
-		List<Character> list2 = new ArrayList<>();
-		List<Integer> list3 = new ArrayList<>();
-		for(String s:list) {
-			list2.add(TextFilter.findTxt(".",":", "."+s+";").get(0).charAt(0));
+		List<String> data = Arrays.asList(format.split(";"));
+		List<Character> keys = new ArrayList<>();
+		List<Integer> values = new ArrayList<>();
+		
+		for(String n : data){
+			String[] tmp = n.split(":");
+
+			keys.add(tmp[0].charAt(0));
+			values.add(Integer.parseInt(tmp[1]));
 		}
-		for(String s:list) {
-			list3.add(Integer.parseInt(TextFilter.findTxt(":",";", "."+s+";").get(0)));
-		}
-		this.keys = list2;
-		this.values = list3;
+
+		this.keys = keys;
+		this.values = values;
 	}
 }
