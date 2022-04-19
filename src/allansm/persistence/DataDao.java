@@ -1,11 +1,11 @@
-package persistence;
+package allansm.persistence;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import entity.Alphabet;
-import entity.Data;
-import entity.Encrypter;
+import allansm.entity.Alphabet;
+import allansm.entity.Data;
+import allansm.entity.Encrypter;
 
 public class DataDao {
 	public void write(Data data,String filename,Encrypter.TYPE type) throws Exception{

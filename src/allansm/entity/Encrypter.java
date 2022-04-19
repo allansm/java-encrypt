@@ -1,4 +1,4 @@
-package entity;
+package allansm.entity;
 
 import java.net.StandardSocketOptions;
 import java.util.ArrayList;

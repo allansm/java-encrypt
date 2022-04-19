@@ -1,4 +1,4 @@
-package entity;
+package allansm.entity;
 
 public class Data {
 	private byte[] decrypted;

@@ -1,4 +1,4 @@
-package entity;
+package allansm.entity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package view;
+package allansm.view;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import entity.Alphabet;
-import entity.Data;
-import entity.Encrypter;
-import persistence.DataDao;
+import allansm.entity.Alphabet;
+import allansm.entity.Data;
+import allansm.entity.Encrypter;
+import allansm.persistence.DataDao;
 
 public class Console {
 	private String inputFileUrl;
