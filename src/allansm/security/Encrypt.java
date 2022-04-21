@@ -1,6 +1,9 @@
 package allansm.security;
 
 import java.util.Arrays;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
+import java.util.Base64;
 
 public class Encrypt{
 	private byte[] data;
@@ -53,18 +56,49 @@ public class Encrypt{
 			if(i > 0) tmp+=delimiter;
 			tmp+=random(data[i]);
 		}
+		
+		Deflater deflater = new Deflater();
+		deflater.setInput(tmp.getBytes());
+		deflater.finish();
 
-		return tmp.getBytes();
+		byte[] b = new byte[Short.MAX_VALUE];
+		int size = deflater.deflate(b);
+
+		byte[] compressed = new byte[size];
+		System.arraycopy(b, 0, compressed, 0, size);
+
+		deflater.end();
+		
+		return Base64.getEncoder().encodeToString(compressed).getBytes();
 	}
 
 	public byte[] decrypt(){
-		byte[] tmp = new byte[new String(this.data).split(delimiter).length];
-		
-		int i=0;
-		for(String data : Arrays.asList(new String(this.data).split(delimiter))){
-			tmp[i++]=(byte)translate(data);	
-		}
+		try{
+			byte[] compressed = Base64.getDecoder().decode(new String(this.data));
+			
+			Inflater inflater = new Inflater();
+			inflater.setInput(compressed, 0, compressed.length);
 
-		return tmp;
+			byte[] b = new byte[Short.MAX_VALUE];
+			int size = inflater.inflate(b);
+
+			inflater.end();
+
+			byte[] data = new byte[size];
+			System.arraycopy(b, 0, data, 0, size);
+
+			byte[] tmp = new byte[new String(data).split(delimiter).length];
+			
+			int i=0;
+			for(String n : Arrays.asList(new String(data).split(delimiter))){
+				tmp[i++]=(byte)translate(n);
+			}
+
+			return tmp;
+		}catch(Exception e){
+			e.printStackTrace();
+
+			return new byte[0];
+		}
 	}
 }
