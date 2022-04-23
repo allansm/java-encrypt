@@ -31,6 +31,23 @@ public class Encrypt{
 		return tmp;
 	}
 
+	private String linear(int x){
+		String tmp = "";
+
+		while(x != 0){
+			int i = x%(dict.length()-1);
+
+			if(i == 0) i+=1;
+
+			if(i <= x){
+				tmp+=dict.charAt(i);
+				x-=i;
+			}
+		}
+
+		return tmp;
+	}
+
 	private int translate(String data){
 		int x = 0;
 		int current = 0;
@@ -70,6 +87,29 @@ public class Encrypt{
 		deflater.end();
 		
 		return Base64.getEncoder().encodeToString(compressed).getBytes();
+	}
+
+	public byte[] linear(){
+		String tmp = "";
+
+		for(int i=0;i<data.length;i++){
+			if(i > 0) tmp+=delimiter;
+			tmp+=linear(data[i]);
+		}
+		
+		Deflater deflater = new Deflater();
+		deflater.setInput(tmp.getBytes());
+		deflater.finish();
+
+		byte[] b = new byte[Short.MAX_VALUE];
+		int size = deflater.deflate(b);
+
+		byte[] compressed = new byte[size];
+		System.arraycopy(b, 0, compressed, 0, size);
+
+		deflater.end();
+		
+		return Base64.getEncoder().encodeToString(compressed).getBytes();	
 	}
 
 	public byte[] decrypt(){

@@ -1,3 +1,3 @@
-@echo off 
-cd .. 
-java -classpath "src;bin" test.Test 
+@echo off
+cd ..
+java -classpath "src;bin" test.Test
