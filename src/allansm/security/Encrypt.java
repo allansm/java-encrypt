@@ -8,23 +8,21 @@ import java.util.Base64;
 public class Encrypt{
 	private byte[] data;
 	private String dict;
-	private String delimiter;
 
-	public Encrypt(byte[] data, String dict, String delimiter){
+	public Encrypt(byte[] data, String dict){
 		this.data = data;
 		this.dict = dict;
-		this.delimiter = delimiter;
 	}
 	
 	private String random(int x){
 		String tmp = "";
 
 		while(x != 0){
-			int rand = (int) ((Math.random() * (((this.dict.length()-1) - 0) + 1)) + 0);
+			int rand = (int) ((Math.random() * (((this.dict.length()-2) - 0) + 1)) + 0);
 			
 			if(rand <= x){
 				x-=rand;
-				tmp+=this.dict.charAt(rand);
+				tmp+=""+this.dict.charAt(rand);
 			}
 		}
 
@@ -35,12 +33,12 @@ public class Encrypt{
 		String tmp = "";
 
 		while(x != 0){
-			int i = x%(dict.length()-1);
+			int i = x%(this.dict.length()-2);
 
 			if(i == 0) i+=1;
 
 			if(i <= x){
-				tmp+=dict.charAt(i);
+				tmp+=""+this.dict.charAt(i);
 				x-=i;
 			}
 		}
@@ -53,7 +51,7 @@ public class Encrypt{
 		int current = 0;
 		
 		while(current < data.length()){
-			for(int i=0;i<dict.length();i++){
+			for(int i=0;i<this.dict.length()-1;i++){
 				if(data.charAt(current) == dict.charAt(i)){
 					x+=i;
 					break;
@@ -69,9 +67,9 @@ public class Encrypt{
 	public byte[] random(){
 		String tmp = "";
 
-		for(int i=0;i<data.length;i++){
-			if(i > 0) tmp+=delimiter;
-			tmp+=random(data[i]);
+		for(int i=0;i<this.data.length;i++){
+			if(i > 0) tmp+=this.dict.charAt(this.dict.length()-1);
+			tmp+=random(this.data[i]);
 		}
 		
 		Deflater deflater = new Deflater();
@@ -92,9 +90,9 @@ public class Encrypt{
 	public byte[] linear(){
 		String tmp = "";
 
-		for(int i=0;i<data.length;i++){
-			if(i > 0) tmp+=delimiter;
-			tmp+=linear(data[i]);
+		for(int i=0;i<this.data.length;i++){
+			if(i > 0) tmp+=this.dict.charAt(this.dict.length()-1);
+			tmp+=linear(this.data[i]);
 		}
 		
 		Deflater deflater = new Deflater();
@@ -127,10 +125,10 @@ public class Encrypt{
 			byte[] data = new byte[size];
 			System.arraycopy(b, 0, data, 0, size);
 
-			byte[] tmp = new byte[new String(data).split(delimiter).length];
+			byte[] tmp = new byte[new String(data).split(""+this.dict.charAt(this.dict.length()-1)).length];
 			
 			int i=0;
-			for(String n : Arrays.asList(new String(data).split(delimiter))){
+			for(String n : Arrays.asList(new String(data).split(""+this.dict.charAt(this.dict.length()-1)))){
 				tmp[i++]=(byte)translate(n);
 			}
 
