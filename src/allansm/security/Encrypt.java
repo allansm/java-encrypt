@@ -13,6 +13,11 @@ public class Encrypt{
 		this.data = data;
 		this.dict = dict;
 	}
+
+	public Encrypt(String data, String dict){
+		this.data = data.getBytes();
+		this.dict = dict;
+	}
 	
 	private String random(int x){
 		String tmp = "";
@@ -84,7 +89,9 @@ public class Encrypt{
 
 		deflater.end();
 		
-		return Base64.getEncoder().encodeToString(compressed).getBytes();
+		this.data = Base64.getEncoder().encodeToString(compressed).getBytes();	
+		
+		return this.data;
 	}
 
 	public byte[] linear(){
@@ -107,7 +114,9 @@ public class Encrypt{
 
 		deflater.end();
 		
-		return Base64.getEncoder().encodeToString(compressed).getBytes();	
+		this.data = Base64.getEncoder().encodeToString(compressed).getBytes();
+		
+		return this.data;	
 	}
 
 	public byte[] decrypt(){
@@ -131,8 +140,10 @@ public class Encrypt{
 			for(String n : Arrays.asList(new String(data).split(""+this.dict.charAt(this.dict.length()-1)))){
 				tmp[i++]=(byte)translate(n);
 			}
+			
+			this.data = tmp;
 
-			return tmp;
+			return this.data;
 		}catch(Exception e){
 			e.printStackTrace();
 
